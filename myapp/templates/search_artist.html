@@ -1,0 +1,64 @@
+<!-- search_artists.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Artist</title>
+    <style>
+        /* CSS styles for the navigation bar */
+        .navbar {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+        }
+
+        .navbar-brand {
+            font-size: 20px;
+            font-weight: bold;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        form {
+            display: flex;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation bar -->
+    <div class="navbar">
+        <a href="/" class="navbar-brand">RiffRealm</a>
+    </div>
+
+    <form method="post" action="{% url 'search_artists' %}">
+        {% csrf_token %}
+        <input type="text" name="song_query" placeholder="Enter an artist name">
+        <input type="submit" value="Search">
+    </form>
+</body>
+</html>

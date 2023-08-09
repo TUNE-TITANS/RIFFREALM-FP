@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+    <style>
+        
+        .artist-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .artist-item {
+            width: 200px;
+            margin: 10px;
+            text-align: center;
+        }
+
+        .artist-image {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .artist-name {
+            font-weight: bold;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            padding: 12px 16px;
+            z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .artist-name {
+            font-weight: bold;
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+    </style>
+    <script>
+        function openLink(event, artistID) {
+          event.preventDefault();
+      
+          // Implement your logic to open a link to YouTube
+          // You can use the 'window.open' method to open the YouTube link in a new tab or window
+          console.log("Opening Spotify link");
+          link = "https://open.spotify.com/artist/" + artistID
+          window.open(link);
+        }
+        function saveSong(event, artistName, artistGenres) {
+            event.preventDefault(); // Prevent the default link behavior
+            
+            // Split the genres into an array
+            const genresArray = JSON.parse(artistGenres);
+
+            // Create a CSV content string
+            let csvContent = `"Artist Name","Genres"\n`;
+            genresArray.forEach(genre => {
+                csvContent += `"${artistName}","${genre.trim()}"\n`;
+            });
+
+            // Create a new Blob with the CSV content
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+
+            // Create a temporary link element and download the file
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'song_details.csv';
+            link.click();
+        }
+      </script>
+</head>
+<body>
+    {% if error_message %}
+        <p>{{ error_message }}</p>
+    {% else %}
+    <h1>Search Results:</h1>
+    <div class="artist-container">
+        {% for artist in artists %}
+            <div class="artist-item">
+                <div class="dropdown">
+                    <img src="{{ artist.images.0.url }}" alt="{{ artist.name }}" class="artist-image">
+                    <div class="dropdown-content">
+                        <a href="#" onclick="saveSong(event, '{{ artist.name }}', '{{ artist.genres|safe }}')">Save Song</a>
+                        <a href="#" onclick="openLink(event, '{{ artist.id }}')">Open Spotify</a>
+                    </div>
+                </div>
+                <p class="artist-name">{{ artist.name }}</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+</body>
+</html>

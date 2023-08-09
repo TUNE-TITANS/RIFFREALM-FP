@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: url('music.jpg') no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    color: white;
+}
+
+header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.container {
+    display: flex;
+    height: calc(100vh - 60px); /* Subtract the header's height */
+}
+
+.sidebar {
+    flex: 1;
+    max-width: 250px;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.main-content {
+    flex: 3;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2em;
+}
+
+.search-input {
+    padding: 20px;
+    width: 100%;
+    max-width: 600px;
+    border-radius: 15px;
+    border: none;
+}
+
+.button-container {
+    gap: 20px;
+}
+
+.button {
+    padding: 15px 25px;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button.sign-up {
+    background: #007BFF;
+}
+
+.button.sign-in {
+    background: #6c757d;
+}
+
+.button.sign-up:hover {
+    background: #0056b3;
+}
+
+.button.sign-in:hover {
+    background: #5a6268;
+}

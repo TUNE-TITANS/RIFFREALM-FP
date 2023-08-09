@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RiffRealm - Sign In</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.pexels.com/photos/13073249/pexels-photo-13073249.jpeg') no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            color: white;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0px 0px 15px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #FFD700;
+            border: none;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .logo img {
+            width: 100px;
+        }
+
+        .container h2 {
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #FFD700;
+        }
+
+        .container form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container form .form-group {
+            margin-bottom: 15px;
+        }
+
+        .container form .form-group label {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .container form .form-group input {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            width: 100%; /* Added property */
+            box-sizing: border-box; /* Added property */
+        }
+
+        .container form .form-group button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #FFD700;
+            color: #000;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease;
+        }
+
+        .container form .form-group button:hover {
+            background: #CDBE70;
+            color: #000;
+        }
+
+        .container p {
+            text-align: center;
+        }
+
+        .container a {
+            color: #FFD700;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .container a:hover {
+            color: #CDBE70;
+        }
+        .error {
+            color: #ff0000;
+        }
+
+    </style>
+</head>
+<body>
+    <a href="{% url 'home' %}" class="logo">
+        <h2>RiffRealm</h2>
+    </a>
+
+    <div class="container">
+        <h2>Sign In to RiffRealm!</h2>
+
+        <form method="POST" action="{% url 'signin' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Email</label><br>
+                <input type="email" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label><br>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">Sign In</button>
+            </div>
+            <!-- Other sign-in form fields -->
+
+  {% if error_message %}
+  <p class="error">{{ error_message }}</p>
+  {% endif %}
+
+<!-- Submit button and other form elements -->
+
+            <p>Don't have an account? <a href="{% url 'signup' %}" class="button sign-up">Sign Up</a></p>
+        </form>
+    </div>
+</body>
+</html>

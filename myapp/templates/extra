@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Library</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: url('https://images.pexels.com/photos/13073249/pexels-photo-13073249.jpeg') no-repeat center center fixed; 
+            background-size: cover;
+            height: 100vh;
+            margin: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: #FFF;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #FFD700;
+        }
+
+        .library-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #FFD700;
+            margin-top: 30px;
+        }
+
+        .section-container {
+            margin-bottom: 40px;
+        }
+
+        .section-container h2 {
+            margin-bottom: 20px;
+            color: #FFD700;
+            text-align: center;
+        }
+
+        .content-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .content-item {
+            text-align: center;
+            max-width: 200px;
+        }
+
+        .content-item img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #ccc;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .content-item h3 {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background-color: #FFD700;
+            border: none;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color:#CDBE70;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2 class="logo">RiffRealm</h2>
+        <div class="button-container">
+            <a href="#" class="btn btn-primary" onclick="clearLibrary()">Clear Library</a>
+            <a href="{% url 'signout' %}" class="btn btn-primary">Sign Out</a>
+        </div>
+    </header>
+    <div class="library-container">
+        <h1>Your Library</h1>
+        
+        <div class="section-container">
+            <h2>Tracks</h2>
+            <div class="content-container" id="favorite-tracks-container">
+                <!-- JavaScript will dynamically populate this container -->
+            </div>
+        </div>
+
+        <div class="section-container">
+            <h2>Artists</h2>
+            <div class="content-container" id="favorite-artists-container">
+                <!-- JavaScript will dynamically populate this container -->
+            </div>
+        </div>
+        
+        <div class="section-container">
+            <h2>Albums</h2>
+            <div class="content-container" id="favorite-albums-container">
+                <!-- JavaScript will dynamically populate this container -->
+            </div>
+        </div>
+    </div>
+    <script>
+            // Load favoritetracks from localStorage when the page is loaded
+    var favoritetracks = JSON.parse(localStorage.getItem('favoritetracks')) || [];
+    
+    // Function to generate the HTML for each favorite track and add it to the page
+    function displayFavoriteTracks() {
+        var tracksContainer = document.getElementById("favorite-tracks-container");
+        tracksContainer.innerHTML = ""; // Clear the container before adding tracks
+    
+        // Loop through the favoritetracks array and create HTML elements for each track
+        for (var i = 0; i < favoritetracks.length; i++) {
+            var track = favoritetracks[i];
+    
+            // Create the track element
+            var trackElement = document.createElement("div");
+            trackElement.classList.add("track");
+    
+            // Create the track image
+            var trackImage = document.createElement("img");
+            trackImage.src = track.image;
+            trackImage.alt = track.name;
+            trackImage.classList.add("track-image");
+    
+            // Create the track name element
+            var trackNameElement = document.createElement("div");
+            trackNameElement.textContent = track.name;
+            trackNameElement.classList.add("track-name");
+    
+            // Create the track artist element
+            var trackArtistElement = document.createElement("div");
+            trackArtistElement.textContent = track.artist;
+            trackArtistElement.classList.add("track-artist");
+    
+            // Add the elements to the track container
+            trackElement.appendChild(trackImage);
+            trackElement.appendChild(trackNameElement);
+            trackElement.appendChild(trackArtistElement);
+    
+            // Add the track container to the tracks container
+            tracksContainer.appendChild(trackElement);
+        }
+    }
+    
+    // Call the function to display favorite tracks when the page is loaded
+    displayFavoriteTracks();
+    // Load favoriteartists from localStorage when the page is loaded
+    var favoriteartists = JSON.parse(localStorage.getItem('favoriteartists')) || [];
+    
+    // Function to generate the HTML for each favorite artist and add it to the page
+    function displayFavoriteArtists() {
+        var artistsContainer = document.getElementById("favorite-artists-container");
+        artistsContainer.innerHTML = ""; // Clear the container before adding artists
+    
+        // Loop through the favoriteartists array and create HTML elements for each artist
+        for (var i = 0; i < favoriteartists.length; i++) {
+            var artist = favoriteartists[i];
+    
+            // Create the artist element
+            var artistElement = document.createElement("div");
+            artistElement.classList.add("artist");
+    
+            // Create the artist image
+            var artistImage = document.createElement("img");
+            artistImage.src = artist.image;
+            artistImage.alt = artist.name;
+    
+            // Create the artist name element
+            var artistNameElement = document.createElement("div");
+            artistNameElement.textContent = artist.name;
+            artistNameElement.classList.add("artist-name");
+    
+            // Add the elements to the artist container
+            artistElement.appendChild(artistImage);
+            artistElement.appendChild(artistNameElement);
+    
+            // Add the artist container to the artists container
+            artistsContainer.appendChild(artistElement);
+        }
+    }
+    
+    // Call the function to display favorite artists when the page is loaded
+    displayFavoriteArtists();
+
+    // Load favouritealbums from localStorage when the page is loaded
+    var favouritealbums = JSON.parse(localStorage.getItem('favouritealbums')) || [];
+
+    // Function to generate the HTML for each favorite album and add it to the page
+    function displayFavoriteAlbums() {
+        var albumsContainer = document.getElementById("favorite-albums-container");
+        albumsContainer.innerHTML = ""; // Clear the container before adding albums
+
+        // Loop through the favouritealbums array and create HTML elements for each album
+        for (var i = 0; i < favouritealbums.length; i++) {
+            var album = favouritealbums[i];
+
+            // Create the album element
+            var albumElement = document.createElement("div");
+            albumElement.classList.add("album");
+
+            // Create the album image
+            var albumImage = document.createElement("img");
+            albumImage.src = album.image;
+            albumImage.alt = album.name;
+            albumImage.classList.add("album-image");
+
+            // Create the album name element
+            var albumNameElement = document.createElement("div");
+            albumNameElement.textContent = album.name;
+            albumNameElement.classList.add("album-name");
+
+            // Add the elements to the album container
+            albumElement.appendChild(albumImage);
+            albumElement.appendChild(albumNameElement);
+
+            // Add the album container to the albums container
+            albumsContainer.appendChild(albumElement);
+        }
+    }
+
+    // Call the function to display favorite albums when the page is loaded
+    displayFavoriteAlbums();
+    // Function to clear the library
+    function clearLibrary() {
+        var confirmed = confirm("Are you sure you want to clear your library?");
+        if (confirmed) {
+            localStorage.removeItem('favoritetracks');
+            alert("Successfully cleared the Library!");
+            favoritetracks = []; // Update the favoritetracks array in memory
+            displayFavoriteTracks(); // Clear the displayed tracks
+        }
+    }
+    </script>
+</body>
+</html>

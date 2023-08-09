@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recommendations</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: url('https://images.pexels.com/photos/13073249/pexels-photo-13073249.jpeg') no-repeat center center fixed; 
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+             background-size: cover;
+            height: 100vh;
+            margin: 0;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #FFD700;
+        }
+        
+        .favorite-artists {
+            margin-bottom: 40px;
+        }
+        
+        .favorite-artists h2 {
+            margin-bottom: 10px;
+        }
+        
+        .favorite-artists .artist {
+            display: inline-block;
+            margin-right: 20px;
+        }
+        
+        .favorite-tracks {
+            margin-bottom: 40px;
+        }
+        
+        .favorite-tracks h2 {
+            margin-bottom: 10px;
+        }
+        
+        .favorite-tracks .track {
+            display: inline-block;
+            margin-right: 20px;
+        }
+        
+        .track img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .artist img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #ccc;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+        .header-container {
+            background-color: rgba(0, 0, 0, 0);
+        }
+        .sidebar {
+            width: 15%;
+            background-color: rgba(56, 56, 56, 0.199);
+            color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            height: 100vh; 
+            position: fixed;
+        }
+
+        .sidebar h3 {
+            color: #fff;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar li a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .sidebar li a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .logo{
+            background-color: #FFD700;
+            border: none;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background-color: #FFD700;
+            border: none;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color:#CDBE70;
+        }
+        .button-container {
+            text-align: right;
+        }
+        .recommended-tracks-container {
+            text-align: center;
+            color: #fff;
+        }
+    </style>
+    <script>
+        function getTracksFromURL() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var tracks = urlParams.get('tracks');
+    return JSON.parse(tracks);
+}
+
+var tracksToRecommend = getTracksFromURL();
+
+    </script>
+</head>
+<body>
+    <header class="header-container">
+        <div class="sidebar">
+            <h2 class="logo">RiffRealm</h2>
+            <ul>
+                <li><a href="{% url 'Dashboard' %}">Search</a></li>
+                <li><a href="#">Songs</a></li>
+                <li><a href="#">Artists</a></li>
+                <li><a href="#">Albums</a></li>
+                <li><a href="{% url 'library' %}">Library</a></li>
+                <li><a href="{% url 'recommendation' %}">Recommendations</a></li>
+            </ul>
+        </div>
+        <div class="button-container"><br>
+            <a href="{% url 'signout' %}" class="btn btn-primary">Sign Out</a>
+        </div>
+    </header>
+    <h1>Recommendations</h1>
+    <div class="recommended-tracks">
+        <div class="recommended-tracks-container" id="recommended-tracks-container">
+            {% for recommendation in recommended_songs %}
+            <div class="recommended-song">
+                <h2>Recommended songs based on "{{ recommendation.input_song.song_name }}" by {{ recommendation.input_song.artist_name }}</h2>
+                <ul>
+                    {% for track in recommendation.recommended_tracks %}
+                    <li>
+                        <strong>Artist:</strong> {{ track.artist_name }}<br>
+                        <strong>Song:</strong> {{ track.song_name }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: url('https://images.pexels.com/photos/13073249/pexels-photo-13073249.jpeg') no-repeat center center fixed; 
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+             background-size: cover;
+            height: 100vh;
+            margin: 0;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .header-container {
+            background-color: rgba(0, 0, 0, 0);
+        }
+
+        .button-container {
+            text-align: right;
+        }
+        .search-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 2em;
+        }
+
+        .search-input {
+        padding: 20px;
+        width: 100%;
+        max-width: 600px;
+        border-radius: 15px;
+        border: none;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar {
+            width: 15%;
+            background-color: rgba(56, 56, 56, 0.199);
+            color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            height: 100vh; 
+            position: fixed;
+        }
+
+        .sidebar h3 {
+            color: #fff;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar li a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .sidebar li a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+
+        .main-content {
+            width: 75%;
+            background-color: rgba(88, 34, 34, 0);
+            padding: 20px;
+            border-radius: 5px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .playlist-creation-bar {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: rgba(57, 73, 63, 0);
+            border-radius: 5px;
+        }
+
+        .btn-primary {
+            background-color: #FFD700;
+            border: none;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color:#CDBE70;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            color:aliceblue;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .form-group input {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            width: 60%;
+        }
+        .logo{
+            background-color: #FFD700;
+            border: none;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .label{
+            color:aliceblue
+        }
+       
+
+        .form-group input:focus {
+            outline: none;
+        }
+
+        h1, h2, h3 {
+            margin-top: 0;
+            color: #29c8ce;
+        }
+        .large {
+            color: #fff;
+            font-weight: bolder;
+            font-size: 37px;
+            text-align: center;
+        }
+    </style>
+      <script>
+        window.onload = function() {
+            document.querySelector('.search-container form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const query = document.querySelector('.search-input').value;
+                fetch(`{% url 'search' %}?song_query=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const resultsContainer = document.querySelector('.main-content');
+                        resultsContainer.innerHTML = '';  // Clear previous results
+                        if (data.results && data.results.length) {
+                            data.results.forEach(item => {
+                                const div = document.createElement('div');
+                                div.textContent = item.title;
+                                resultsContainer.appendChild(div);
+                            });
+                        } else {
+                            resultsContainer.innerHTML = `<p>No results found for "${query}".</p>`;
+                        }
+                    });
+            });
+        };
+    </script>
+</head>
+<body>
+    <header class="header-container">
+        <div class="sidebar">
+            <h2 class="logo">RiffRealm</h2>
+            <ul>
+                <li><a href="{% url 'Dashboard' %}">Search</a></li>
+                <li><a href="#">Songs</a></li>
+                <li><a href="#">Artists</a></li>
+                <li><a href="#">Albums</a></li>
+                <li><a href="{% url 'library' %}">Library</a></li>
+                <li><a href="{% url 'recommendation' %}">Recommendations</a></li>
+            </ul>
+        </div>
+        <div class="button-container"><br>
+            <a href="{% url 'signout' %}" class="btn btn-primary">Sign Out</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <h1 class="large">Unleash the Power of Personalized Music Exploration</h1>
+            <form method="POST" action="{% url 'Dashboard' %}">
+                {% csrf_token %}
+                <div class="search-container">
+                    <form method="post" action="{% url 'search' %}">
+                        {% csrf_token %}
+                        <input class="search-input" type="text" name="song_query" placeholder="Search Artist, Album, Tracks...">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </form>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Playlist</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(330deg, #282828, #FFD700);
+            color: #fff;
+            height: 100vh;
+            margin: 0;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .header-container {
+            background-color: #342c002e;
+            padding: 20px;
+        }
+
+        .button-container {
+            text-align: right;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .main-content {
+            width: 80%;
+            background-color: rgba(56, 56, 56, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 1em;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.5em;
+            border: none;
+            border-radius: 5px;
+            margin-top: 0.5em;
+        }
+
+        .btn-primary {
+            background-color: #FFD700;
+            border: none;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: #CDBE70;
+        }
+        .logo{
+            background-color: #FFD700;
+            border: none;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header class="header-container">
+        <div class="button-container">
+            <a href="{% url 'signout' %}" class="btn btn-primary">Sign Out</a>
+        </div>
+        <a class="logo" href="{% url 'Dashboard' %}">RiffRealm</a>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <h1>Create a Playlist</h1>
+            <form method="POST" action="{% url 'create_playlist' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="playlist-name">Playlist Name:</label>
+                    <input type="text" class="form-control" id="playlist-name" name="playlist_name" placeholder="Enter a name for your playlist">
+                </div>
+                <div class="form-group">
+                    <label for="playlist-songs">Songs:</label>
+                    <input type="text" class="form-control" id="playlist-songs" name="playlist_songs" placeholder="Enter song names separated by commas">
+                </div>
+                <button type="submit" class="btn btn-primary">Create Playlist</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

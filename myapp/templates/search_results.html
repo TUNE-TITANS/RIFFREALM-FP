@@ -1,0 +1,420 @@
+<!-- search_results.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+    <style>
+        /* CSS styles for the navigation bar */
+        .navbar {
+            padding: 10px;
+        }
+        
+        h2 {
+            color: burlywood;
+        }
+        
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            padding: 12px 16px;
+            z-index: 1;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .navbar-brand {
+            font-size: 20px;
+            font-weight: bold;
+            text-decoration: none;
+            color: #fff;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.pexels.com/photos/13073249/pexels-photo-13073249.jpeg') no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            color: white;
+        }
+        
+        .search-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .search-input {
+            width: 90%;
+            height: 60px;
+            border-radius: 30px;
+            padding: 0 20px;
+            font-size: 20px;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.555);
+            backdrop-filter: blur(5px);
+            color: #333;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+        }
+        
+        .search-input:focus {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 30px;
+            cursor: pointer;
+            color: #333;
+            font-size: 24px;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .track {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .track-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-right: 550px;
+        }
+        
+        .track-image {
+            width: 60px;
+            height: 60px;
+            margin-right: 10px;
+        }
+        
+        .track-info {
+            flex: 1;
+        }
+        
+        .track-name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .track-artist {
+            font-size: 16px;
+            color: #d5dac0;
+        }
+        
+        .no-results {
+            font-size: 16px;
+            color: #c4e93d;
+        }
+        
+        .artist-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .artist-item {
+            width: 200px;
+            margin: 10px;
+            text-align: center;
+        }
+        
+        .artist-image {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+        
+        .artist-name {
+            font-weight: bold;
+            color: white;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        .album-image {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border-radius: 20%;
+        }
+        
+        .sidebar {
+            width: 15%;
+            background-color: rgba(56, 56, 56, 0.199);
+            color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            height: 100vh; 
+            position: fixed;
+        }
+        
+        .sidebar h3 {
+            color: #fff;
+        }
+        
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar li a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        
+        .sidebar li a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .logo {
+            background-color: #FFD700;
+            border: none;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .button-container {
+            text-align: right;
+        }
+        
+        .btn-primary {
+            background-color: #FFD700;
+            border: none;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary:hover {
+            background-color:#CDBE70;
+        }
+        
+        .moving {
+            text-align: center;
+            color: #FFD700;
+        }
+    </style>
+    <script>
+        function toggleDropdown(event) {
+          event.stopPropagation(); // Prevent the click event from bubbling up
+      
+          // Get the dropdown content element
+          var dropdownContent = document.getElementById("dropdown-content");
+      
+          // Toggle the display of the dropdown content
+          dropdownContent.style.display = (dropdownContent.style.display === "block") ? "none" : "block";
+        }
+  
+        function openLink(event, trackID) {
+          event.preventDefault();
+      
+          // Implement your logic to open a link to YouTube
+          // You can use the 'window.open' method to open the YouTube link in a new tab or window
+          console.log("Opening Spotify link");
+          link = "https://open.spotify.com/track/" + trackID
+          window.open(link);
+        }
+        function openLink2(event, artistID) {
+          event.preventDefault();
+      
+          // Implement your logic to open a link to YouTube
+          // You can use the 'window.open' method to open the YouTube link in a new tab or window
+          console.log("Opening Spotify link");
+          link = "https://open.spotify.com/artist/" + artistID
+          window.open(link);
+        }
+        function openLink3(event, albumID) {
+          event.preventDefault();
+      
+          // You can use the 'window.open' method to open the YouTube link in a new tab or window
+          console.log("Opening Spotify link");
+          link = "https://open.spotify.com/album/" + albumID
+          window.open(link);
+        }
+        // Load favoritetracks from localStorage when the page is loaded
+        var favoritetracks = JSON.parse(localStorage.getItem('favoritetracks')) || [];
+
+        function addfavouritetracks(event, trackname, artistname, imageurl, trackID) {
+            event.preventDefault();
+
+            var trackExists = favoritetracks.some(function (track) {
+            return track.name === trackname && track.artist === artistname;
+            });
+
+            if (trackExists) {
+            alert(trackname + " by " + artistname + " is already added to the library!");
+            } else {
+            favoritetracks.push({ name: trackname, image: imageurl, artist: artistname, id: trackID });
+            alert("Successfully added " + trackname + " by " + artistname + " to the Library!");
+            localStorage.setItem('favoritetracks', JSON.stringify(favoritetracks));
+            }
+        }
+
+        var favoriteartists = JSON.parse(localStorage.getItem('favoriteartists')) || [];
+    
+        function addfavoriteartists(event, artistname, imageurl, artistID) {
+            event.preventDefault();
+        
+            var artistExists = favoriteartists.some(function (artist) {
+            return artist.name === artistname;
+            });
+        
+            if (artistExists) {
+            alert(artistname + " is already added to the library!");
+            } else {
+            favoriteartists.push({ name: artistname, image: imageurl, id:artistID });
+            alert("Successfully added " + artistname + " to the Library!");
+            localStorage.setItem('favoriteartists', JSON.stringify(favoriteartists));
+            }
+        }
+
+        // Load favouritealbums from localStorage when the page is loaded
+        var favouritealbums = JSON.parse(localStorage.getItem('favouritealbums')) || [];
+
+        function addfavouritealbums(event, albumname, imageurl, albumID) {
+            event.preventDefault();
+
+            var albumExists = favouritealbums.some(function (album) {
+            return album.name === albumname;
+            });
+
+            if (albumExists) {
+            alert(albumname + " is already added to the library!");
+            } else {
+            favouritealbums.push({ name: albumname, image: imageurl, id: albumID });
+            alert("Successfully added " + albumname + " to the Library!");
+            localStorage.setItem('favouritealbums', JSON.stringify(favouritealbums));
+            }
+        }
+      </script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div>
+        <header>
+            <div class="sidebar">
+                <h2 class="logo">RiffRealm</h2>
+                <ul>
+                    <li><a href="{% url 'Dashboard' %}">Search</a></li>
+                    <li><a href="#">Songs</a></li>
+                    <li><a href="#">Artists</a></li>
+                    <li><a href="#">Albums</a></li>
+                    <li><a href="{% url 'library' %}">Library</a></li>
+                    <li><a href="{% url 'recommendation' %}">Recommendations</a></li>
+                </ul>
+            </div>
+            <div class="button-container"><br>
+                <a href="{% url 'signout' %}" class="btn btn-primary">Sign Out</a>
+            </div>
+        </header>
+
+        <div class="search-container">
+            <form method="post" action="{% url 'Dashboard' %}">
+                {% csrf_token %}
+                <input class="search-input" type="text" name="song_query" placeholder="Search Artist, Album, Tracks...">
+            </form>
+        </div>
+        <div class="main-container">
+            <h2 class="moving">Tracks</h2>
+            <div class="track-container">
+                {% if tracks %}
+            <ul>
+                {% for track in tracks %}
+                    <li class="track">
+                        <div class="dropdown">
+                            <img class="track-image" src="{{ track.album.images.0.url }}" alt="Album Art" onclick="toggleDropdown(event)">
+                            <div class="dropdown-content" id="dropdown-content">
+                              <a href="#" onclick="addfavouritetracks(event, '{{ track.name }}', '{{ track.artists.0.name }}', '{{ track.album.images.0.url }}', '{{ track.id }}')">Add To Library</a><br>
+                              <a href="#" onclick="openLink(event, '{{ track.id }}')">Open Spotify</a>
+                            </div>
+                          </div>
+                        <div class="track-info">
+                            <div class="track-name">{{ track.name }}</div>
+                            <div class="track-artist">{{ track.artists.0.name }}</div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="no-results">No search results found.</p>
+        {% endif %}
+    
+        {% if error_message %}
+            <p>{{ error_message }}</p>
+        {% else %}
+            </div>
+            
+        <h2 class="moving">Artists</h2>
+            <div class="artist-container">
+                {% for artist in artists %}
+                    <div class="artist-item">
+                        <div class="dropdown">
+                            <img src="{{ artist.images.0.url }}" alt="{{ artist.name }}" class="artist-image">
+                            <div class="dropdown-content">
+                                <a href="#" onclick="addfavoriteartists(event, '{{ artist.name }}', '{{ artist.images.0.url }}', '{{ artist.id }}')">Add to Library</a><br>
+                                <a href="#" onclick="openLink2(event, '{{ artist.id }}')">Open Spotify</a>
+                            </div>
+                        </div>
+                        <p class="artist-name">{{ artist.name }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <h2 class="moving">Albums</h2>
+            <div class="artist-container">
+                {% for album in albums %}
+                    <div class="artist-item">
+                        <div class="dropdown">
+                            <img src="{{ album.images.0.url }}" alt="{{ album.name }}" class="album-image">
+                            <div class="dropdown-content">
+                                <a href="#" onclick="addfavouritealbums(event, '{{ album.name }}', '{{ album.images.0.url }}', '{{ album.id }}')">Add To Library</a><br>
+                                <a href="#" onclick="openLink3(event, '{{ album.id }}')">Open Spotify</a>
+                            </div>
+                        </div>
+                        <p class="artist-name">{{ album.name }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        </div>
+
+
+</div>
+</body>
+</html>
