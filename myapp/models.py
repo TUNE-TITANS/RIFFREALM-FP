@@ -34,3 +34,21 @@ class Playlist(models.Model):
     def __str__(self):
         return self.name
 
+class FavoriteTrack(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    track_name = models.CharField(max_length=255)
+    artist_name = models.CharField(max_length=255)
+    image_url = models.URLField()
+    track_id = models.CharField(max_length=255)
+
+class FavoriteArtist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    artist_name = models.CharField(max_length=255)
+    image_url = models.URLField()
+    artist_id = models.CharField(max_length=255)
+
+class FavoriteAlbum(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    album_name = models.CharField(max_length=255)
+    image_url = models.URLField()
+    album_id = models.CharField(max_length=255)

@@ -285,43 +285,6 @@
             localStorage.setItem('favoritetracks', JSON.stringify(favoritetracks));
             }
         }
-
-        var favoriteartists = JSON.parse(localStorage.getItem('favoriteartists')) || [];
-    
-        function addfavoriteartists(event, artistname, imageurl, artistID) {
-            event.preventDefault();
-        
-            var artistExists = favoriteartists.some(function (artist) {
-            return artist.name === artistname;
-            });
-        
-            if (artistExists) {
-            alert(artistname + " is already added to the library!");
-            } else {
-            favoriteartists.push({ name: artistname, image: imageurl, id:artistID });
-            alert("Successfully added " + artistname + " to the Library!");
-            localStorage.setItem('favoriteartists', JSON.stringify(favoriteartists));
-            }
-        }
-
-        // Load favouritealbums from localStorage when the page is loaded
-        var favouritealbums = JSON.parse(localStorage.getItem('favouritealbums')) || [];
-
-        function addfavouritealbums(event, albumname, imageurl, albumID) {
-            event.preventDefault();
-
-            var albumExists = favouritealbums.some(function (album) {
-            return album.name === albumname;
-            });
-
-            if (albumExists) {
-            alert(albumname + " is already added to the library!");
-            } else {
-            favouritealbums.push({ name: albumname, image: imageurl, id: albumID });
-            alert("Successfully added " + albumname + " to the Library!");
-            localStorage.setItem('favouritealbums', JSON.stringify(favouritealbums));
-            }
-        }
       </script>
 </head>
 <body>
@@ -345,7 +308,7 @@
         <div class="search-container">
             <form method="post" action="{% url 'Dashboard' %}">
                 {% csrf_token %}
-                <input class="search-input" type="text" name="song_query" placeholder="Search Artist, Album, Tracks...">
+                <input class="search-input" type="text" name="song_query" placeholder="Search Tracks...">
             </form>
         </div>
         <div class="main-container">
@@ -377,42 +340,7 @@
             <p>{{ error_message }}</p>
         {% else %}
             </div>
-            
-        <h2 class="moving">Artists</h2>
-            <div class="artist-container">
-                {% for artist in artists %}
-                    <div class="artist-item">
-                        <div class="dropdown">
-                            <img src="{{ artist.images.0.url }}" alt="{{ artist.name }}" class="artist-image">
-                            <div class="dropdown-content">
-                                <a href="#" onclick="addfavoriteartists(event, '{{ artist.name }}', '{{ artist.images.0.url }}', '{{ artist.id }}')">Add to Library</a><br>
-                                <a href="#" onclick="openLink2(event, '{{ artist.id }}')">Open Spotify</a>
-                            </div>
-                        </div>
-                        <p class="artist-name">{{ artist.name }}</p>
-                    </div>
-                {% endfor %}
-            </div>
-
-            <h2 class="moving">Albums</h2>
-            <div class="artist-container">
-                {% for album in albums %}
-                    <div class="artist-item">
-                        <div class="dropdown">
-                            <img src="{{ album.images.0.url }}" alt="{{ album.name }}" class="album-image">
-                            <div class="dropdown-content">
-                                <a href="#" onclick="addfavouritealbums(event, '{{ album.name }}', '{{ album.images.0.url }}', '{{ album.id }}')">Add To Library</a><br>
-                                <a href="#" onclick="openLink3(event, '{{ album.id }}')">Open Spotify</a>
-                            </div>
-                        </div>
-                        <p class="artist-name">{{ album.name }}</p>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
         </div>
-
-
 </div>
 </body>
 </html>

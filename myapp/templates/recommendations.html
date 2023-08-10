@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+    {% load static %}
     <title>Recommendations</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
@@ -131,14 +133,17 @@
         }
     </style>
     <script>
-        function getTracksFromURL() {
-    var urlParams = new URLSearchParams(window.location.search);
-    var tracks = urlParams.get('tracks');
-    return JSON.parse(tracks);
-}
+    document.addEventListener("DOMContentLoaded", function() {
+        var favoritetracks = JSON.parse(localStorage.getItem('favoritetracks')) || [];
+        var favoritetracksField = document.getElementById("favoritetracksField");
+        favoritetracksField.value = JSON.stringify(favoritetracks);
 
-var tracksToRecommend = getTracksFromURL();
-
+        var recommendForm = document.getElementById("recommendForm");
+        recommendForm.addEventListener("submit", function(event) {
+            // Ensure that the local storage data is set to the hidden input field before submitting
+            favoritetracksField.value = JSON.stringify(favoritetracks);
+        });
+    });
     </script>
 </head>
 <body>
@@ -147,9 +152,7 @@ var tracksToRecommend = getTracksFromURL();
             <h2 class="logo">RiffRealm</h2>
             <ul>
                 <li><a href="{% url 'Dashboard' %}">Search</a></li>
-                <li><a href="#">Songs</a></li>
-                <li><a href="#">Artists</a></li>
-                <li><a href="#">Albums</a></li>
+                <li><a href="{% url 'songs' %}">Songs</a></li>
                 <li><a href="{% url 'library' %}">Library</a></li>
                 <li><a href="{% url 'recommendation' %}">Recommendations</a></li>
             </ul>
@@ -159,23 +162,38 @@ var tracksToRecommend = getTracksFromURL();
         </div>
     </header>
     <h1>Recommendations</h1>
-    <div class="recommended-tracks">
-        <div class="recommended-tracks-container" id="recommended-tracks-container">
-            {% for recommendation in recommended_songs %}
+    <form id="recommendForm" action="{% url 'recommendation' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="favoritetracks" id="favoritetracksField">
+        <div class="button-maker" style="text-align: center;">
+            <button type="submit" class="btn btn-primary">Get Recommendations</button>
+        </div>
+    </form>
+    <div class="recommended-tracks" id="recommended-tracks-container">
+        {% if recommended_songs %}
+        <div class="recommended-tracks-container">
+            {% for song in recommended_songs %}
             <div class="recommended-song">
-                <h2>Recommended songs based on "{{ recommendation.input_song.song_name }}" by {{ recommendation.input_song.artist_name }}</h2>
+                <h2>Input Song:</h2>
+                <p><strong>Artist:</strong> {{ song.input_song.artist_name }}</p>
+                <p><strong>Song Name:</strong> {{ song.input_song.song_name }}</p>
+            </div>
+            <div class="recommended-tracks-list">
+                <h2>Recommended Tracks:</h2>
                 <ul>
-                    {% for track in recommendation.recommended_tracks %}
+                    {% for track in song.recommended_tracks %}
                     <li>
-                        <strong>Artist:</strong> {{ track.artist_name }}<br>
-                        <strong>Song:</strong> {{ track.song_name }}
+                        <p><strong>Artist:</strong> {{ track.artist_name }}</p>
+                        <p><strong>Song Name:</strong> {{ track.song_name }}</p>
                     </li>
                     {% endfor %}
                 </ul>
             </div>
             {% endfor %}
         </div>
+        {% else %}
+        <p>No recommendations available.</p>
+        {% endif %}
     </div>
-    
 </body>
 </html>

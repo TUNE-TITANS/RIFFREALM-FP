@@ -7,6 +7,8 @@ import base64
 import requests
 import json
 from django.http import JsonResponse
+from django.contrib.sessions.models import Session
+
 
 
 def library(request):
@@ -139,30 +141,34 @@ def Dashboard(request):
     return render(request, 'Dashboard.html')
 
 def recommendation(request):
-    # Load favoritetracks from session
-    favoritetracks = request.session.get('favoritetracks', [])
+    if request.method == 'POST':
+        favoritetracks_cookie = request.COOKIES.get('favoritetracks')
+        favoritetracks_localstorage = request.POST.get('favoritetracks')
 
-    # Construct request_data based on all favoritetracks
-    request_data = [{"song_name": track["name"], "artist_name": track["artist"]} for track in favoritetracks]
+        if favoritetracks_localstorage:
+            favoritetracks = json.loads(favoritetracks_localstorage)
+        elif favoritetracks_cookie:
+            favoritetracks = json.loads(favoritetracks_cookie)
+        else:
+            favoritetracks = []
 
-    # Make the HTTP request to the recommendation API
-    response = requests.post('https://music-recommendation23-986ec1dfcc36.herokuapp.com/recommend', json=request_data)
+        request_data = [{"song_name": track["name"], "artist_name": track["artist"]} for track in favoritetracks]
 
-    if response.status_code == 200:
-        recommended_songs = response.json()["recommended_songs"]
-    else:
-        recommended_songs = []
+        response = requests.post('https://music-recommendation23-986ec1dfcc36.herokuapp.com/recommend', json=request_data)
 
-    context = {
-        'recommended_songs': recommended_songs
-    }
+        if response.status_code == 200:
+            recommended_songs = response.json()["recommended_songs"]
+        else:
+            recommended_songs = []
 
-    print(favoritetracks)
-    ...
+        context = {
+            'recommended_songs': recommended_songs
+        }
+        
 
-    print(context)
+        return render(request, 'recommendations.html', context)
 
-    return render(request, 'recommendations.html', context)
+    return render(request, 'recommendations.html')
 
 def create_playlist(request):
     
@@ -227,3 +233,50 @@ def search(request):
 
         return render(request, 'search_results.html', context)
 
+def songs(request):
+    if request.method == 'POST':
+        query = request.POST.get('song_query')
+
+        # Step 1: Construct the Authorization Header
+        client_id = 'dd80a94f8bd34e47bcf020d0e975db1a'
+        client_secret = '8ab5a229184046b192ff3cb3445a3df9'
+        auth_header = base64.b64encode(f'{client_id}:{client_secret}'.encode()).decode()
+
+        # Step 2: Make the Token Request
+        token_url = 'https://accounts.spotify.com/api/token'
+        headers = {
+            'Authorization': f'Basic {auth_header}',
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+        data = {'grant_type': 'client_credentials'}
+        response = requests.post(token_url, headers=headers, data=data)
+
+        # Step 3: Handle the Token Response
+        response_json = response.json()
+        access_token = response_json['access_token']
+
+        # Step 4: Use the Access Token in subsequent API requests
+        api_url = 'https://api.spotify.com/v1/search'
+        headers = {
+            'Authorization': f'Bearer {access_token}'
+        }
+        track_params = {
+            'q': query,
+            'type': 'track',
+            'limit': 5  # Number of track search results to retrieve
+        }
+        
+        # Search for tracks (songs)
+        track_response = requests.get(api_url, headers=headers, params=track_params)
+        track_search_results = track_response.json()
+        tracks = []
+        if 'tracks' in track_search_results:
+            tracks = track_search_results['tracks']['items']
+
+        context = {
+            'tracks': tracks
+        }
+
+        return render(request, 'tracks.html', context)
+
+    return render(request, 'Dashboard.html')

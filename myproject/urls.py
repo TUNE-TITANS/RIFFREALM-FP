@@ -30,5 +30,6 @@ urlpatterns = [
     path('signout/', views.signout, name='signout'),
     path('create_playlist/', views.create_playlist, name='create_playlist'),
     path('recommendation/', views.recommendation, name='recommendation'),
+    path('songs/', views.songs, name='songs'),
     
 ]
